@@ -10,7 +10,7 @@ import java.util.Set;
 
 
 public class Store implements Serializable{
-    private static final String CASHIER_FILE = "cashiers.dat";
+    private static final String CASHIER_FILE = "cashiers.txt";
     private List<Product> products;
     private List<Cashier> cashiers;
     private List<CashReg> cashRegisters;

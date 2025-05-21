@@ -66,12 +66,12 @@ public class ProductController {
 
         Product p = new Product(id, name, price, category, expiration, quantity);
         store.addProduct(p);
-        store.saveProductsToFile("products.dat");
+        store.saveProductsToFile("products.txt");
         view.print("Product added successfully.");
     }
 
     public void viewAllProducts() {
-        store.loadProductsFromFile("products.dat");
+        store.loadProductsFromFile("products.txt");
 
         List<Product> products = store.getAllProducts();
         if (products.isEmpty()) {
@@ -89,7 +89,7 @@ public class ProductController {
 
     public void removeProduct() {
 
-        store.loadProductsFromFile("products.dat");
+        store.loadProductsFromFile("products.txt");
 
         List<Product> products = store.getAllProducts();
         if (products.isEmpty()) {
@@ -107,7 +107,7 @@ public class ProductController {
         String id = view.getInput("Enter product ID to remove: ");
         boolean removed = store.removeProductById(id);
         if (removed) {
-            store.saveProductsToFile("products.dat");
+            store.saveProductsToFile("products.txt");
             view.print("Product removed successfully.");
         } else {
             view.print("Product with given ID not found.");
