@@ -20,7 +20,7 @@ public class CashierController {
 
         Cashier c = new Cashier(id, name, salary);
         store.getAllCashiers().add(c);
-        store.saveCashiersToFile("cashiers.txt");
+        store.saveCashiersToFile("src/cashiers.txt");
         view.print("Cashier added.");
     }
 

@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 
 public class Cashier implements Serializable {
-    private static final String CASHIER_FILE = "cashiers.txt";
+    private static final String CASHIER_FILE = "src/cashiers.txt";
     private String id;
     private String name;
     private double salary;
