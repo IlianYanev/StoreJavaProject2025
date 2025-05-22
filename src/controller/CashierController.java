@@ -1,26 +1,34 @@
 package controller;
 
 import model.Cashier;
-import model.Store;
+import service.CashierService;
 import view.StoreView;
 
+import java.util.List;
+
 public class CashierController {
-    private final Store store;
+    private final CashierService cashierService;
     private final StoreView view;
 
-    public CashierController(Store store, StoreView view) {
-        this.store = store;
+    public CashierController(CashierService cashierService, StoreView view) {
+        this.cashierService = cashierService;
         this.view = view;
     }
 
     public void addCashier() {
-        String id = store.generateNextCashierId();
         String name = view.getInput("Enter cashier name: ");
-        double salary = Double.parseDouble(view.getInput("Enter salary: "));
-
-        Cashier c = new Cashier(id, name, salary);
-        store.getAllCashiers().add(c);
-        store.saveCashiersToFile("src/cashiers.txt");
+        double salary;
+        while (true) {
+            try {
+                salary = Double.parseDouble(view.getInput("Enter salary: "));
+                if (salary < 0) throw new NumberFormatException();
+                break;
+            } catch (NumberFormatException e) {
+                view.print("Invalid salary! Please enter a positive number.");
+            }
+        }
+        Cashier c = cashierService.createCashier(name, salary);
+        cashierService.addCashier(c);
         view.print("Cashier added.");
     }
 
@@ -28,8 +36,14 @@ public class CashierController {
         boolean back = false;
         while (!back) {
             view.print("--- Cashiers List ---");
-            for (Cashier c : store.getAllCashiers()) {
-                view.print("ID: " + c.getId() + " | " + c.getName() + " | " + c.getSalary() + "BGN" );
+            List<Cashier> cashiers = cashierService.getAllCashiers();
+            if (cashiers.isEmpty()) {
+                view.print("No cashiers available.");
+                back = true;
+                continue;
+            }
+            for (Cashier c : cashiers) {
+                view.print("ID: " + c.getId() + " | " + c.getName() + " | " + c.getSalary() + " BGN");
             }
             String input = view.getInput("Enter 9 to go back: ");
             if (input.equals("9")) {
@@ -39,18 +53,21 @@ public class CashierController {
     }
 
     public void removeCashier() {
+        List<Cashier> cashiers = cashierService.getAllCashiers();
+        if (cashiers.isEmpty()) {
+            view.print("No cashiers available.");
+            return;
+        }
         view.print("--- Cashiers List ---");
-        for (Cashier c : store.getAllCashiers()) {
-            view.print("ID: " + c.getId() + " | " + c.getName() + " | " + c.getSalary() + "BGN" );
+        for (Cashier c : cashiers) {
+            view.print("ID: " + c.getId() + " | " + c.getName() + " | " + c.getSalary() + " BGN");
         }
         String id = view.getInput("Enter cashier ID to remove: ");
-        boolean removed = store.getAllCashiers().removeIf(c -> c.getId().equals(id));
+        boolean removed = cashierService.removeCashierById(id);
         if (removed) {
             view.print("Cashier removed successfully.");
-            store.saveCashiersToFile();  // Записваме промяната във файла!
         } else {
             view.print("No cashier found with that ID.");
         }
     }
-
 }

@@ -2,24 +2,24 @@ package controller;
 
 import model.Product;
 import model.ProductCategory;
-import model.Store;
+import service.ProductService;
 import view.StoreView;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class ProductController {
-    private final Store store;
+    private final ProductService productService;
     private final StoreView view;
 
-    public ProductController(Store store, StoreView view) {
-        this.store = store;
+    public ProductController(ProductService productService, StoreView view) {
+        this.productService = productService;
         this.view = view;
     }
 
     public void addProduct() {
         view.print("--- Add Product ---");
-        String id = store.generateNextProductId();
+
         String name = view.getInput("Enter product name: ");
 
         double price;
@@ -64,16 +64,13 @@ public class ProductController {
             }
         }
 
-        Product p = new Product(id, name, price, category, expiration, quantity);
-        store.addProduct(p);
-        store.saveProductsToFile("src/products.txt");
+        Product p = productService.createProduct(name, price, category, expiration, quantity);
+        productService.addProduct(p);
         view.print("Product added successfully.");
     }
 
     public void viewAllProducts() {
-        store.loadProductsFromFile("src/products.txt");
-
-        List<Product> products = store.getAllProducts();
+        List<Product> products = productService.getAllProducts();
         if (products.isEmpty()) {
             view.print("No products available.");
         } else {
@@ -86,12 +83,8 @@ public class ProductController {
         view.getInput("Press Enter to return to menu...");
     }
 
-
     public void removeProduct() {
-
-        store.loadProductsFromFile("src/products.txt");
-
-        List<Product> products = store.getAllProducts();
+        List<Product> products = productService.getAllProducts();
         if (products.isEmpty()) {
             view.print("No products available.");
         } else {
@@ -101,13 +94,10 @@ public class ProductController {
             }
         }
 
-
-
         view.print("--- Remove Product ---");
         String id = view.getInput("Enter product ID to remove: ");
-        boolean removed = store.removeProductById(id);
+        boolean removed = productService.removeProductById(id);
         if (removed) {
-            store.saveProductsToFile("src/products.txt");
             view.print("Product removed successfully.");
         } else {
             view.print("Product with given ID not found.");

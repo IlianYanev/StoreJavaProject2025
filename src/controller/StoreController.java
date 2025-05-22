@@ -1,6 +1,9 @@
 package controller;
 
 import model.Store;
+import service.CashierService;
+import service.ProductService;
+import service.CashRegService;
 import view.StoreView;
 
 public class StoreController {
@@ -12,9 +15,14 @@ public class StoreController {
     public StoreController(Store store, StoreView view) {
         this.store = store;
         this.view = view;
-        this.productController = new ProductController(store, view);
-        this.cashierController = new CashierController(store, view);
+
+        ProductService productService = new ProductService(store);
+        this.productController = new ProductController(productService, view);
+
+        CashierService cashierService = new CashierService(store);
+        this.cashierController = new CashierController(cashierService, view);
     }
+
 
     public void start() {
         boolean running = true;
@@ -80,7 +88,8 @@ public class StoreController {
                     cashierController.removeCashier();
                     break;
                 case "7":
-                    new CashRegController(store, view).manageCashRegisters();
+                    CashRegService cashRegService = new CashRegService(store);
+                    new CashRegController(cashRegService, view).manageCashRegisters();
                     break;
                 case "9":
                     back = true;
