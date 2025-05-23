@@ -4,25 +4,31 @@ import model.Store;
 import service.CashierService;
 import service.ProductService;
 import service.CashRegService;
+import service.StoreService;
 import view.StoreView;
 
 public class StoreController {
     private final Store store;
     private final StoreView view;
+    private final StoreService storeService;
     private final ProductController productController;
     private final CashierController cashierController;
 
     public StoreController(Store store, StoreView view) {
         this.store = store;
         this.view = view;
+        this.storeService = new StoreService(store, view);
+
+        // Зареждане на данните при стартиране
+        storeService.loadProductsFromFile();
+        storeService.loadCashiersFromFile();
 
         ProductService productService = new ProductService(store);
-        this.productController = new ProductController(productService, view);
-
         CashierService cashierService = new CashierService(store);
+
+        this.productController = new ProductController(productService, view);
         this.cashierController = new CashierController(cashierService, view);
     }
-
 
     public void start() {
         boolean running = true;
@@ -50,6 +56,10 @@ public class StoreController {
                     view.print("Invalid option.");
             }
         }
+
+        // Запазваме преди изход
+        storeService.saveProductsToFile();
+        storeService.saveCashiersToFile();
     }
 
     private void ownerMenu() {

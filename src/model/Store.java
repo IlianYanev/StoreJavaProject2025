@@ -116,7 +116,6 @@ public class Store implements Serializable{
             try {
                 usedIds.add(Integer.parseInt(c.getId()));
             } catch (NumberFormatException e) {
-                // Ако ID-то не е число, пропускаме
             }
         }
 
@@ -127,10 +126,6 @@ public class Store implements Serializable{
 
         return String.valueOf(id);
     }
-
-
-
-
 
     public boolean removeProductById(String id) {
         return products.removeIf(p -> p.getId().equals(id));
@@ -172,35 +167,8 @@ public class Store implements Serializable{
         }
     }
 
-
-
-
-    // === Cashier Management ===
-
-    public void addCashier(Cashier cashier) {
-        cashiers.add(cashier);
-        saveCashiersToFile(Store.CASHIER_FILE);
-        // запис при добавяне
-    }
-
-    public boolean removeCashierById(String id) {
-        boolean removed = cashiers.removeIf(c -> c.getId().equals(id));
-        if (removed) saveCashiersToFile(); // запис при премахване
-        return removed;
-    }
-
-
     public List<Cashier> getAllCashiers() {
         return cashiers;
-    }
-
-    public Cashier getCashierById(String id) {
-        for (Cashier c : cashiers) {
-            if (c.getId().equals(id)) {
-                return c;
-            }
-        }
-        return null;
     }
 
     public void saveCashiersToFile(String filename) {
@@ -226,18 +194,8 @@ public class Store implements Serializable{
         }
     }
 
-    // 👇 ТЕЗИ два метода са ключови!
-    public void saveCashiersToFile() {
-        saveCashiersToFile(CASHIER_FILE);
-    }
-
-    public void loadCashiersFromFile() {
-        loadCashiersFromFile(CASHIER_FILE);
-    }
-
     public List<CashReg> getCashRegisters() {
         return cashRegisters;
     }
-
 
 }
