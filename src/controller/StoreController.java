@@ -1,11 +1,10 @@
 package controller;
 
 import model.Store;
-import service.CashierService;
-import service.ProductService;
-import service.CashRegService;
-import service.StoreService;
+import service.*;
 import view.StoreView;
+import controller.CustomerController;
+
 
 public class StoreController {
     private final Store store;
@@ -13,11 +12,14 @@ public class StoreController {
     private final StoreService storeService;
     private final ProductController productController;
     private final CashierController cashierController;
+    private final CustomerController customerController;
+
 
     public StoreController(Store store, StoreView view) {
         this.store = store;
         this.view = view;
         this.storeService = new StoreService(store, view);
+
 
         // Зареждане на данните при стартиране
         storeService.loadProductsFromFile();
@@ -25,9 +27,11 @@ public class StoreController {
 
         ProductService productService = new ProductService(store);
         CashierService cashierService = new CashierService(store);
+        CustomerService customerService = new CustomerService(productService, storeService);
 
         this.productController = new ProductController(productService, view);
         this.cashierController = new CashierController(cashierService, view);
+        this.customerController = new CustomerController(customerService, storeService, view);
     }
 
     public void start() {
@@ -111,6 +115,29 @@ public class StoreController {
     }
 
     private void clientMenu() {
-        view.print("Client functionality coming soon...");
+        boolean back = false;
+
+        while (!back) {
+            view.print("\n--- Client Menu ---");
+            view.print("1. Add Products to Cart");
+            view.print("2. View Cart");
+            view.print("9. Back");
+
+            String input = view.getInput("Choose option: ");
+
+            switch (input) {
+                case "1":
+                    customerController.start();
+                    break;
+                case "2":
+                    customerController.viewCart();
+                    break;
+                case "9":
+                    back = true;
+                    break;
+                default:
+                    view.print("Invalid option.");
+            }
+        }
     }
 }
