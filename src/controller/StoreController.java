@@ -13,21 +13,21 @@ public class StoreController {
     private final ProductController productController;
     private final CashierController cashierController;
     private final CustomerController customerController;
+    private final ReceiptService receiptService;
 
 
     public StoreController(Store store, StoreView view) {
         this.store = store;
         this.view = view;
         this.storeService = new StoreService(store, view);
+        this.receiptService = new ReceiptService();
 
-
-        // Зареждане на данните при стартиране
         storeService.loadProductsFromFile();
         storeService.loadCashiersFromFile();
 
         ProductService productService = new ProductService(store);
         CashierService cashierService = new CashierService(store);
-        CustomerService customerService = new CustomerService(productService, storeService);
+        CustomerService customerService = new CustomerService(productService, storeService, view);
 
         this.productController = new ProductController(productService, view);
         this.cashierController = new CashierController(cashierService, view);
@@ -78,7 +78,9 @@ public class StoreController {
             view.print("5. View Cashiers");
             view.print("6. Remove Cashier");
             view.print("7. Manage Cash Registers");
-            view.print("9. Back");
+            view.print("8. View All Receipts");
+            view.print("9. View Financial Report");
+            view.print("0. Back");
 
             String choice = view.getInput("Choose option: ");
 
@@ -105,7 +107,13 @@ public class StoreController {
                     CashRegService cashRegService = new CashRegService(store);
                     new CashRegController(cashRegService, view).manageCashRegisters();
                     break;
+                case "8":
+                    receiptService.viewAllReceipts();
+                    break;
                 case "9":
+                    receiptService.generateStoreReport(store, storeService);
+                    break;
+                case "0":
                     back = true;
                     break;
                 default:

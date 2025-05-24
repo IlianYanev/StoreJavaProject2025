@@ -1,9 +1,12 @@
 package service;
 
+import jdk.management.jfr.RecordingInfo;
 import model.Product;
 import model.CashReg;
+import service.ReceiptService;
 import service.ProductService;
 import service.StoreService;
+import view.StoreView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +15,15 @@ public class CustomerService {
     private final ProductService productService;
     private final StoreService storeService;
     private final List<Product> cart = new ArrayList<>();
+    private final ReceiptService receiptService;
+    private final StoreView view;
 
-    public CustomerService(ProductService productService, StoreService storeService) {
+
+    public CustomerService(ProductService productService, StoreService storeService, StoreView view) {
         this.productService = productService;
         this.storeService = storeService;
+        this.view = view;
+        this.receiptService = new ReceiptService();
     }
 
     public List<Product> getAvailableProducts() {
@@ -84,38 +92,39 @@ public class CustomerService {
 
     public void checkout() {
         if (cart.isEmpty()) {
-            System.out.println("Cart is empty. Nothing to checkout.");
+            view.print("Cart is empty. Nothing to checkout.");
             return;
         }
 
         List<CashReg> registers = storeService.getCashRegisters();
         List<CashReg> active = new ArrayList<>();
 
-        System.out.println("\n--- Available Cash Registers ---");
+        view.print("\n--- Available Cash Registers ---");
         for (CashReg reg : registers) {
             if (reg.getCashier() != null) {
-                System.out.printf("%d. %s (ID: %s)%n", reg.getNumber(), reg.getCashier().getName(), reg.getCashier().getId());
+                view.print(reg.getNumber() + ". " + reg.getCashier().getName() + " (ID: " + reg.getCashier().getId() + ")");
                 active.add(reg);
             }
         }
 
         if (active.isEmpty()) {
-            System.out.println("No cash register working.");
+            view.print("No cash register working.");
             return;
         }
 
-        int chosenNumber;
-        while (true) {
+        CashReg selectedRegister = null;
+
+        while (selectedRegister == null) {
             try {
-                chosenNumber = Integer.parseInt(System.console().readLine("Select register number: "));
-                CashReg selected = registers.get(chosenNumber - 1);
-                if (selected.getCashier() == null) {
-                    System.out.println("This register has no cashier!");
+                int chosenNumber = Integer.parseInt(view.getInput("Select register number: "));
+                CashReg potential = storeService.getCashRegisters().get(chosenNumber - 1);
+                if (potential.getCashier() == null) {
+                    view.print("This register has no cashier!");
                 } else {
-                    break;
+                    selectedRegister = potential;
                 }
             } catch (Exception e) {
-                System.out.println("Invalid input.");
+                view.print("Invalid input.");
             }
         }
 
@@ -124,23 +133,26 @@ public class CustomerService {
             total += storeService.calculateSellingPrice(p) * p.getQuantity();
         }
 
-        System.out.printf("Total to pay: %.2f BGN%n", total);
+        view.print(String.format("Total to pay: %.2f BGN", total));
+
         double payment;
         try {
-            payment = Double.parseDouble(System.console().readLine("Enter payment amount: "));
+            payment = Double.parseDouble(view.getInput("Enter payment amount: "));
         } catch (Exception e) {
-            System.out.println("Invalid amount.");
+            view.print("Invalid amount.");
             return;
         }
 
         if (payment < total) {
-            System.out.println("Not enough money. Returning to menu...");
+            view.print("Not enough money. Returning to menu...");
             return;
         }
 
-        System.out.println("Purchase completed. Thank you!");
+        receiptService.printAndSaveReceipt(cart, selectedRegister.getCashier(), payment, total);
+        view.print("Purchase completed. Thank you!");
         cart.clear();
     }
+
 
 
 
