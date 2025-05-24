@@ -13,10 +13,10 @@ public class Store implements Serializable{
     private static final String CASHIER_FILE = "src/cashiers.txt";
     private List<Product> products;
     private List<Cashier> cashiers;
-    private List<CashReg> cashRegisters;
-    private double foodMarkupPercent = 10.0;     // default 20%
+    private final List<CashReg> cashRegisters;
+    private double foodMarkupPercent = 10.0;
     private double nonFoodMarkupPercent = 20.0;
-    private int daysBeforeExpirationDiscount = 3; // или стойност, която вече имаш
+    private int daysBeforeExpirationDiscount = 3;
     private double expirationDiscountPercent = 10.0;
 
 

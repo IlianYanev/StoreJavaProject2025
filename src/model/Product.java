@@ -74,8 +74,10 @@ public class Product implements Serializable {
     }
 
     public boolean isExpired() {
+        if (expirationDate == null) return false;
         return expirationDate.isBefore(LocalDate.now());
     }
+
 
 
     // toString()

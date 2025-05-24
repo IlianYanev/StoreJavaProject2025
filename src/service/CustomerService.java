@@ -1,6 +1,7 @@
 package service;
 
 import model.Product;
+import model.CashReg;
 import service.ProductService;
 import service.StoreService;
 
@@ -80,5 +81,67 @@ public class CustomerService {
 
         System.out.printf("Total: %.2f BGN%n", total);
     }
+
+    public void checkout() {
+        if (cart.isEmpty()) {
+            System.out.println("Cart is empty. Nothing to checkout.");
+            return;
+        }
+
+        List<CashReg> registers = storeService.getCashRegisters();
+        List<CashReg> active = new ArrayList<>();
+
+        System.out.println("\n--- Available Cash Registers ---");
+        for (CashReg reg : registers) {
+            if (reg.getCashier() != null) {
+                System.out.printf("%d. %s (ID: %s)%n", reg.getNumber(), reg.getCashier().getName(), reg.getCashier().getId());
+                active.add(reg);
+            }
+        }
+
+        if (active.isEmpty()) {
+            System.out.println("No cash register working.");
+            return;
+        }
+
+        int chosenNumber;
+        while (true) {
+            try {
+                chosenNumber = Integer.parseInt(System.console().readLine("Select register number: "));
+                CashReg selected = registers.get(chosenNumber - 1);
+                if (selected.getCashier() == null) {
+                    System.out.println("This register has no cashier!");
+                } else {
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input.");
+            }
+        }
+
+        double total = 0;
+        for (Product p : cart) {
+            total += storeService.calculateSellingPrice(p) * p.getQuantity();
+        }
+
+        System.out.printf("Total to pay: %.2f BGN%n", total);
+        double payment;
+        try {
+            payment = Double.parseDouble(System.console().readLine("Enter payment amount: "));
+        } catch (Exception e) {
+            System.out.println("Invalid amount.");
+            return;
+        }
+
+        if (payment < total) {
+            System.out.println("Not enough money. Returning to menu...");
+            return;
+        }
+
+        System.out.println("Purchase completed. Thank you!");
+        cart.clear();
+    }
+
+
 
 }

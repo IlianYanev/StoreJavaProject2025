@@ -65,4 +65,10 @@ public class CustomerController {
         view.getInput("Press Enter to return...");
     }
 
+    public void checkout() {
+        customerService.checkout();
+        view.getInput("Press Enter to return...");
+    }
+
+
 }

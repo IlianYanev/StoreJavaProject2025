@@ -44,12 +44,27 @@ public class ProductController {
         }
 
         LocalDate expiration = null;
-        while (expiration == null) {
-            try {
-                String input = view.getInput("Enter expiration date (YYYY-MM-DD): ");
-                expiration = LocalDate.parse(input);
-            } catch (Exception e) {
-                view.print("Invalid date format. Please enter date as YYYY-MM-DD.");
+
+        if (category == ProductCategory.FOOD) {
+            while (expiration == null) {
+                try {
+                    String input = view.getInput("Enter expiration date (YYYY-MM-DD): ");
+                    expiration = LocalDate.parse(input);
+                } catch (Exception e) {
+                    view.print("Invalid date format. Please enter date as YYYY-MM-DD.");
+                }
+            }
+        } else {
+            String response = view.getInput("Does this product have an expiration date? (y/n): ").toLowerCase();
+            if (response.equals("y")) {
+                while (expiration == null) {
+                    try {
+                        String input = view.getInput("Enter expiration date (YYYY-MM-DD): ");
+                        expiration = LocalDate.parse(input);
+                    } catch (Exception e) {
+                        view.print("Invalid date format. Please enter date as YYYY-MM-DD.");
+                    }
+                }
             }
         }
 
@@ -68,6 +83,7 @@ public class ProductController {
         productService.addProduct(p);
         view.print("Product added successfully.");
     }
+
 
     public void viewAllProducts() {
         List<Product> products = productService.getAllProducts();

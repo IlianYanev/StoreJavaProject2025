@@ -45,14 +45,21 @@ public class StoreService {
 
     public double calculateSellingPrice(Product product) {
         double basePrice = product.getPurchasePrice();
-        double markup = (product.getCategory() == ProductCategory.FOOD) ? store.getFoodMarkupPercent() : store.getNonFoodMarkupPercent();
+        double markup = (product.getCategory() == ProductCategory.FOOD) ?
+                store.getFoodMarkupPercent() : store.getNonFoodMarkupPercent();
+
         double price = basePrice + (basePrice * markup / 100);
-        long daysToExpire = ChronoUnit.DAYS.between(LocalDate.now(), product.getExpirationDate());
-        if (daysToExpire < store.getDaysBeforeExpirationDiscount()) {
-            price *= (1 - store.getExpirationDiscountPercent() / 100);
+
+        if (product.getExpirationDate() != null) {
+            long daysToExpire = ChronoUnit.DAYS.between(LocalDate.now(), product.getExpirationDate());
+            if (daysToExpire < store.getDaysBeforeExpirationDiscount()) {
+                price *= (1 - store.getExpirationDiscountPercent() / 100);
+            }
         }
+
         return Math.round(price * 100.0) / 100.0;
     }
+
 
     public void saveProductsToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(PRODUCT_FILE))) {

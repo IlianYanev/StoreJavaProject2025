@@ -121,6 +121,7 @@ public class StoreController {
             view.print("\n--- Client Menu ---");
             view.print("1. Add Products to Cart");
             view.print("2. View Cart");
+            view.print("3. Checkout");
             view.print("9. Back");
 
             String input = view.getInput("Choose option: ");
@@ -132,6 +133,9 @@ public class StoreController {
                 case "2":
                     customerController.viewCart();
                     break;
+                case "3":
+                    customerController.checkout();
+                    break;
                 case "9":
                     back = true;
                     break;
@@ -140,4 +144,7 @@ public class StoreController {
             }
         }
     }
+
+
+
 }
