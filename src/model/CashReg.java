@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 
 public class CashReg implements Serializable {
-    private final int number; // 1 до 6
+    private final int number;
     private Cashier cashier;
 
     public CashReg(int number) {

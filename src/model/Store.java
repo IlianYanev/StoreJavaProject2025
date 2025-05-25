@@ -65,7 +65,6 @@ public class Store implements Serializable{
         loadCashiersFromFile(CASHIER_FILE);
     }
 
-    // === Product Management ===
 
     public void addProduct(Product product) {
         products.add(product);
@@ -77,7 +76,7 @@ public class Store implements Serializable{
             try {
                 usedIds.add(Integer.parseInt(p.getId()));
             } catch (NumberFormatException e) {
-                // Ако id-то не е число, го пропускаме
+
             }
         }
 
@@ -86,28 +85,6 @@ public class Store implements Serializable{
             id++;
         }
         return String.valueOf(id);
-    }
-
-    public double calculateSellingPrice(Product product) {
-        double basePrice = product.getPurchasePrice();
-        double markup = 0;
-
-        if (product.getCategory() == ProductCategory.FOOD) {
-            markup = foodMarkupPercent;
-        } else {
-
-            markup = nonFoodMarkupPercent;
-        }
-
-        double priceWithMarkup = basePrice + (basePrice * markup / 100);
-
-        // Проверка за наближаващ срок на годност
-        long daysToExpire = ChronoUnit.DAYS.between(LocalDate.now(), product.getExpirationDate());
-        if (daysToExpire < daysBeforeExpirationDiscount) {
-            priceWithMarkup *= (1 - expirationDiscountPercent / 100);
-        }
-
-        return Math.round(priceWithMarkup * 100.0) / 100.0; // закръгляне до 2 знака
     }
 
     public String generateNextCashierId() {
@@ -135,15 +112,6 @@ public class Store implements Serializable{
         return products;
     }
 
-    public Product getProductById(String id) {
-        for (Product p : products) {
-            if (p.getId().equals(id)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     public void saveProductsToFile(String filename) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(products);
@@ -152,7 +120,6 @@ public class Store implements Serializable{
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void loadProductsFromFile(String filename) {
         File file = new File(filename);
         if (!file.exists()) {
@@ -179,7 +146,6 @@ public class Store implements Serializable{
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void loadCashiersFromFile(String filename) {
         File file = new File(filename);
         if (!file.exists()) {

@@ -2,7 +2,6 @@ package model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class Product implements Serializable {
     private String id;
@@ -23,8 +22,6 @@ public class Product implements Serializable {
 
     }
 
-
-    // Getters and setters
     public String getId() {
         return id;
     }
@@ -78,9 +75,6 @@ public class Product implements Serializable {
         return expirationDate.isBefore(LocalDate.now());
     }
 
-
-
-    // toString()
     @Override
     public String toString() {
         return String.format("ID: %s | Name: %s | Price: %.2f | Category: %s | Expiration: %s | Quantity: %d",

@@ -1,0 +1,11 @@
+=== RECEIPT #5 ===
+Date/Time: 2025-05-25 18:48:58
+Cashier: Ilian Yanev (ID: 1)
+
+TV | Qty: 40 | Unit Price: 2000.00 BGN | Total: 80000.00 BGN
+
+------------------------
+Total Cost: 96000.00 BGN
+Paid: 100000.00 BGN
+Change: 4000.00 BGN
+========================

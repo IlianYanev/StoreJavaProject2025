@@ -1,0 +1,12 @@
+=== RECEIPT #3 ===
+Date/Time: 2025-05-25 18:43:00
+Cashier: Ilian Yanev (ID: 1)
+
+Water | Qty: 3 | Unit Price: 1.10 BGN | Total: 3.30 BGN
+Burger | Qty: 20 | Unit Price: 7.00 BGN | Total: 140.00 BGN
+
+------------------------
+Total Cost: 157.96 BGN
+Paid: 160.00 BGN
+Change: 2.04 BGN
+========================

@@ -87,7 +87,10 @@ public class ReceiptService {
                 .sorted(Comparator.comparing(File::getName))
                 .toList();
 
-        System.out.println("\n--- Receipts List ---");
+        System.out.println("\n+--------------- Receipts List -------------+");
+        System.out.println("|   #   |     Date     |     Total (BGN)    |");
+        System.out.println("+-------------------------------------------+");
+
 
         int index = 1;
         for (File file : sorted) {
@@ -106,7 +109,10 @@ public class ReceiptService {
                 System.out.println("Error reading " + file.getName());
             }
 
-            System.out.printf("%d. %s | Date: %s | Total: %s%n", index, file.getName(), date, total);
+            System.out.printf("| %d | %s | %-14s \n", index, date, total);
+
+
+
             index++;
         }
 
@@ -129,7 +135,7 @@ public class ReceiptService {
         }
 
         File selected = sorted.get(choice - 1);
-        System.out.println("\n--- Receipt: " + selected.getName() + " ---");
+
         try (BufferedReader reader = new BufferedReader(new FileReader(selected))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -138,6 +144,7 @@ public class ReceiptService {
         } catch (IOException e) {
             System.out.println("Error reading receipt.");
         }
+
     }
 
     public void generateStoreReport(Store store, StoreService storeService) {

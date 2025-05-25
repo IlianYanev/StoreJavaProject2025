@@ -19,9 +19,9 @@ public class CustomerController {
     }
 
     public void start() {
-        boolean adding = true;
 
-        while (adding) {
+
+        while (true) {
             view.print("\n--- Available Products ---");
             List<Product> products = customerService.getAvailableProducts();
             if (products.isEmpty()) {
@@ -69,6 +69,5 @@ public class CustomerController {
         customerService.checkout();
         view.getInput("Press Enter to return...");
     }
-
 
 }
