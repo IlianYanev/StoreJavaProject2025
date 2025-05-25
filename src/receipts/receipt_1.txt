@@ -1,12 +1,11 @@
-=== RECEIPT #0001 ===
-Date/Time: 2025-05-24 20:23:35
-Cashier: Ilian Yanev (ID: 1)
+=== RECEIPT #1 ===
+Date/Time: 2025-05-25 20:35:02
+Cashier: Plamen Kostov (ID: 2)
 
-Water | Qty: 10 | Unit Price: 1.10 BGN | Total: 11.00 BGN
-TV | Qty: 2 | Unit Price: 2000.00 BGN | Total: 4000.00 BGN
+Bread | Qty: 1 | Unit Price: 1.50 BGN | Total: 1.50 BGN
 
 ------------------------
-Total Cost: 4813.20 BGN
-Paid: 4813.20 BGN
-Change: 0.00 BGN
+Total Cost: 1.80 BGN
+Paid: 2.00 BGN
+Change: 0.20 BGN
 ========================

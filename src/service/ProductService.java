@@ -9,9 +9,12 @@ import java.util.List;
 
 public class ProductService {
     private final Store store;
+    private final String productFilePath;
 
-    public ProductService(Store store) {
+    public ProductService(Store store, String productFilePath) {
         this.store = store;
+        this.productFilePath = productFilePath;
+
     }
 
     public Product createProduct(String name, double price, ProductCategory category,
@@ -22,19 +25,19 @@ public class ProductService {
 
     public void addProduct(Product product) {
         store.addProduct(product);
-        store.saveProductsToFile("src/products.txt");
+        store.saveProductsToFile(productFilePath);
     }
 
     public List<Product> getAllProducts() {
-        store.loadProductsFromFile("src/products.txt");
+        store.loadProductsFromFile(productFilePath);
         return store.getAllProducts();
     }
 
     public boolean removeProductById(String id) {
-        store.loadProductsFromFile("src/products.txt");
+        store.loadProductsFromFile(productFilePath);
         boolean removed = store.removeProductById(id);
         if (removed) {
-            store.saveProductsToFile("src/products.txt");
+            store.saveProductsToFile(productFilePath);
         }
         return removed;
     }

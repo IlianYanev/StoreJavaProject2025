@@ -1,11 +1,12 @@
 === RECEIPT #2 ===
-Date/Time: 2025-05-24 20:32:30
+Date/Time: 2025-05-25 21:20:37
 Cashier: Ilian Yanev (ID: 1)
 
-TV | Qty: 1 | Unit Price: 2000.00 BGN | Total: 2000.00 BGN
+Milk | Qty: 4 | Unit Price: 2.30 BGN | Total: 9.20 BGN
+Cheese | Qty: 2 | Unit Price: 5.00 BGN | Total: 10.00 BGN
 
 ------------------------
-Total Cost: 2400.00 BGN
-Paid: 2420.00 BGN
-Change: 20.00 BGN
+Total Cost: 22.04 BGN
+Paid: 23.00 BGN
+Change: 0.96 BGN
 ========================

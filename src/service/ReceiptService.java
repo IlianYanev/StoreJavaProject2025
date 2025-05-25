@@ -1,7 +1,7 @@
 package service;
 
-import model.Cashier;
 import model.Product;
+import model.Cashier;
 import model.Store;
 
 import java.io.*;
@@ -10,7 +10,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ReceiptService {
-    private static final String RECEIPT_FOLDER = "src/receipts/";
+    private final String receiptFolder;
+
+    public ReceiptService(String receiptFolder) {
+        this.receiptFolder = receiptFolder;
+    }
 
     public void printAndSaveReceipt(List<Product> cart, Cashier cashier, double totalPaid, double totalCost) {
         if (cart.isEmpty() || cashier == null) return;
@@ -18,9 +22,10 @@ public class ReceiptService {
         LocalDateTime now = LocalDateTime.now();
         String timestamp = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         int receiptNumber = getNextReceiptNumber();
-        String filename = RECEIPT_FOLDER + "receipt_" + receiptNumber + ".txt";
+        String filename = receiptFolder + "receipt_" + receiptNumber + ".txt";
 
         StringBuilder sb = new StringBuilder();
+        System.out.println();
         sb.append("=== RECEIPT #").append(receiptNumber).append(" ===\n");
         sb.append("Date/Time: ").append(timestamp).append("\n");
         sb.append("Cashier: ").append(cashier.getName()).append(" (ID: ").append(cashier.getId()).append(")\n\n");
@@ -40,7 +45,7 @@ public class ReceiptService {
         System.out.println(sb);
 
         try {
-            File dir = new File(RECEIPT_FOLDER);
+            File dir = new File(receiptFolder);
             if (!dir.exists()) dir.mkdirs();
 
             FileWriter writer = new FileWriter(filename);
@@ -52,7 +57,7 @@ public class ReceiptService {
     }
 
     private int getNextReceiptNumber() {
-        File dir = new File(RECEIPT_FOLDER);
+        File dir = new File(receiptFolder);
         if (!dir.exists()) return 1;
 
         File[] files = dir.listFiles((d, name) -> name.matches("receipt_\\d+\\.txt"));
@@ -71,7 +76,7 @@ public class ReceiptService {
     }
 
     public void viewAllReceipts() {
-        File dir = new File(RECEIPT_FOLDER);
+        File dir = new File(receiptFolder);
         if (!dir.exists() || dir.listFiles() == null) {
             System.out.println("No receipts found.");
             return;
@@ -91,7 +96,6 @@ public class ReceiptService {
         System.out.println("|   #   |     Date     |     Total (BGN)    |");
         System.out.println("+-------------------------------------------+");
 
-
         int index = 1;
         for (File file : sorted) {
             String total = "N/A";
@@ -110,9 +114,6 @@ public class ReceiptService {
             }
 
             System.out.printf("| %d | %s | %-14s \n", index, date, total);
-
-
-
             index++;
         }
 
@@ -144,14 +145,13 @@ public class ReceiptService {
         } catch (IOException e) {
             System.out.println("Error reading receipt.");
         }
-
     }
 
     public void generateStoreReport(Store store, StoreService storeService) {
         double revenue = 0;
         double cost = 0;
 
-        File dir = new File(RECEIPT_FOLDER);
+        File dir = new File(receiptFolder);
         if (!dir.exists()) {
             System.out.println("No receipts for report.");
             return;

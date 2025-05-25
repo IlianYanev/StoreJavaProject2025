@@ -19,12 +19,12 @@ public class StoreController {
         this.store = store;
         this.view = view;
         this.storeService = new StoreService(store, view);
-        this.receiptService = new ReceiptService();
+        this.receiptService = new ReceiptService("src/receipts/");
 
         storeService.loadProductsFromFile();
         storeService.loadCashiersFromFile();
 
-        ProductService productService = new ProductService(store);
+        ProductService productService = new ProductService(store, "src/products.txt");
         CashierService cashierService = new CashierService(store);
         CustomerService customerService = new CustomerService(productService, storeService, view);
 

@@ -1,10 +1,6 @@
 package service;
 
-import model.Store;
-import model.Product;
-import model.Cashier;
-import model.CashReg;
-import model.ProductCategory;
+import model.*;
 import view.StoreView;
 
 import java.io.*;
@@ -15,38 +11,25 @@ import java.util.*;
 public class StoreService {
     private final Store store;
     private final StoreView view;
-    private final String CASHIER_FILE = "src/cashiers.txt";
-    private final String PRODUCT_FILE = "src/products.txt";
+    private final String productFilePath;
+    private final String cashierFilePath;
 
     public StoreService(Store store, StoreView view) {
+        this(store, view, "src/products.txt", "src/cashiers.txt");
+    }
+
+    public StoreService(Store store, StoreView view, String productFilePath, String cashierFilePath) {
         this.store = store;
         this.view = view;
-    }
-
-    public String generateNextProductId() {
-        Set<Integer> usedIds = new HashSet<>();
-        for (Product p : store.getAllProducts()) {
-            try { usedIds.add(Integer.parseInt(p.getId())); } catch (NumberFormatException ignored) {}
-        }
-        int id = 1;
-        while (usedIds.contains(id)) id++;
-        return String.valueOf(id);
-    }
-
-    public String generateNextCashierId() {
-        Set<Integer> usedIds = new HashSet<>();
-        for (Cashier c : store.getAllCashiers()) {
-            try { usedIds.add(Integer.parseInt(c.getId())); } catch (NumberFormatException ignored) {}
-        }
-        int id = 1;
-        while (usedIds.contains(id)) id++;
-        return String.valueOf(id);
+        this.productFilePath = productFilePath;
+        this.cashierFilePath = cashierFilePath;
     }
 
     public double calculateSellingPrice(Product product) {
         double basePrice = product.getPurchasePrice();
-        double markup = (product.getCategory() == ProductCategory.FOOD) ?
-                store.getFoodMarkupPercent() : store.getNonFoodMarkupPercent();
+        double markup = (product.getCategory() == ProductCategory.FOOD)
+                ? store.getFoodMarkupPercent()
+                : store.getNonFoodMarkupPercent();
 
         double price = basePrice + (basePrice * markup / 100);
 
@@ -60,9 +43,8 @@ public class StoreService {
         return Math.round(price * 100.0) / 100.0;
     }
 
-
     public void saveProductsToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(PRODUCT_FILE))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(productFilePath))) {
             oos.writeObject(store.getAllProducts());
         } catch (IOException e) {
             view.print("Error saving products: " + e.getMessage());
@@ -70,8 +52,9 @@ public class StoreService {
     }
 
     public void loadProductsFromFile() {
-        File file = new File(PRODUCT_FILE);
+        File file = new File(productFilePath);
         if (!file.exists()) return;
+
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             List<Product> products = (List<Product>) ois.readObject();
             store.getAllProducts().clear();
@@ -82,7 +65,7 @@ public class StoreService {
     }
 
     public void saveCashiersToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(CASHIER_FILE))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(cashierFilePath))) {
             oos.writeObject(store.getAllCashiers());
         } catch (IOException e) {
             view.print("Error saving cashiers: " + e.getMessage());
@@ -90,8 +73,9 @@ public class StoreService {
     }
 
     public void loadCashiersFromFile() {
-        File file = new File(CASHIER_FILE);
+        File file = new File(cashierFilePath);
         if (!file.exists()) return;
+
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             List<Cashier> cashiers = (List<Cashier>) ois.readObject();
             store.getAllCashiers().clear();

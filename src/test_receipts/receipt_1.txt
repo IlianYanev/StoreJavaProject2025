@@ -1,0 +1,11 @@
+=== RECEIPT #1 ===
+Date/Time: 2025-05-25 21:51:52
+Cashier: Cashier Report (ID: 2)
+
+Report Product | Qty: 1 | Unit Price: 3.00 BGN | Total: 3.00 BGN
+
+------------------------
+Total Cost: 3.30 BGN
+Paid: 5.00 BGN
+Change: 1.70 BGN
+========================

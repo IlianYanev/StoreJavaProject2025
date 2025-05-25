@@ -1,11 +1,7 @@
 package service;
 
-import jdk.management.jfr.RecordingInfo;
 import model.Product;
 import model.CashReg;
-import service.ReceiptService;
-import service.ProductService;
-import service.StoreService;
 import view.StoreView;
 
 import java.util.ArrayList;
@@ -23,7 +19,7 @@ public class CustomerService {
         this.productService = productService;
         this.storeService = storeService;
         this.view = view;
-        this.receiptService = new ReceiptService();
+        this.receiptService = new ReceiptService("src/receipts/");
     }
 
     public List<Product> getAvailableProducts() {
